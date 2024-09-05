@@ -1,9 +1,10 @@
+import MainPage from "./Components/MainPage"
 
 function App() {
 
   return (
     <>
-      HI
+    <MainPage></MainPage>
     </>
   )
 }
