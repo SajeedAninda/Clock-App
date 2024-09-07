@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import dayTimeBGImg from "../assets/desktop/daytime.jpg";
+import nightTimeImg from "../assets/desktop/bg-image-nighttime.jpg";
 import refreshIcon from "../assets/desktop/icon-refresh.svg";
 import sunIcon from "../assets/desktop/icon-sun.svg";
+import moonIcon from "../assets/desktop/icon-moon.svg";
 
 const MainPage = () => {
     const [quotes, setQuote] = useState(null);
@@ -28,7 +30,7 @@ const MainPage = () => {
         const date = new Date(datetime);
         const hours = date.getHours();
         const minutes = date.getMinutes();
-        const formattedHours = hours % 12 || 12; 
+        const formattedHours = hours % 12 || 12;
         const ampm = hours >= 12 ? 'PM' : 'AM';
         const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
         return { formattedHours, formattedMinutes, ampm, hours };
@@ -42,8 +44,13 @@ const MainPage = () => {
         return 'NIGHT';
     };
 
+    const isNightTime = (hours) => {
+        return hours >= 18 || hours < 6;
+    };
+
     return (
-        <div className="relative w-full h-[100vh] bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${dayTimeBGImg})` }}>
+        <div className="relative w-full h-[100vh] bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${isNightTime(getFormattedTime(timeData?.datetime).hours) ? nightTimeImg : dayTimeBGImg})` }}>
             <div className="absolute inset-0 bg-black opacity-40"></div>
             <div className="relative z-10 w-[80%] pt-16 mx-auto">
                 <div className='quoteDiv w-[55%] flex justify-between gap-3'>
@@ -73,15 +80,9 @@ const MainPage = () => {
                     {timeData && (
                         <>
                             <div className='flex gap-4'>
-                                <img className='w-[30px]' src={sunIcon} alt="" />
+                                <img className='w-[30px]' src={isNightTime(getFormattedTime(timeData.datetime).hours) ? moonIcon : sunIcon} alt="Icon" />
                                 <p className='text-white text-[20px] font-medium tracking-[4px]'>
-                                    {timeData ? (
-                                        <>
-                                            <span>GOOD {getGreetingText(getFormattedTime(timeData.datetime).hours)}</span>, IT'S CURRENTLY
-                                        </>
-                                    ) : (
-                                        <span>LOADING TIME...</span>
-                                    )}
+                                    <span>GOOD {getGreetingText(getFormattedTime(timeData.datetime).hours)}</span>, IT'S CURRENTLY
                                 </p>
                             </div>
 
@@ -103,7 +104,9 @@ const MainPage = () => {
 
                                 <div className='flex gap-4'>
                                     <p className='text-white font-bold text-[32px] tracking-[2px]'>IN</p>
-                                    <p className='text-white font-bold text-[32px] tracking-[2px]'>{timeData.timezone}</p>
+                                    <p className='text-white font-bold text-[32px] tracking-[2px]'>
+                                        {timeData.timezone.split('/')[1]}
+                                    </p>
                                 </div>
                             </div>
                         </>
