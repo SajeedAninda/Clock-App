@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import dayTimeBGImg from "../assets/desktop/daytime.jpg";
 import refreshIcon from "../assets/desktop/icon-refresh.svg";
+import sunIcon from "../assets/desktop/icon-sun.svg";
 
 const MainPage = () => {
     const [quotes, setQuote] = useState(null);
+    const [timeData, setTimeData] = useState(null);
 
     const fetchQuote = () => {
         fetch('https://api.quotable.io/random')
@@ -11,15 +13,40 @@ const MainPage = () => {
             .then(json => setQuote(json));
     };
 
+    const fetchTimeData = () => {
+        fetch('http://worldtimeapi.org/api/ip')
+            .then(response => response.json())
+            .then(json => setTimeData(json));
+    };
+
     useEffect(() => {
         fetchQuote();
+        fetchTimeData();
     }, []);
+
+    const getFormattedTime = (datetime) => {
+        const date = new Date(datetime);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const formattedHours = hours % 12 || 12; 
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+        return { formattedHours, formattedMinutes, ampm, hours };
+    };
+
+    const getGreetingText = (hours) => {
+        if (hours >= 6 && hours < 12) return 'MORNING';
+        if (hours >= 12 && hours < 15) return 'NOON';
+        if (hours >= 15 && hours < 18) return 'AFTERNOON';
+        if (hours >= 18 && hours < 20) return 'EVENING';
+        return 'NIGHT';
+    };
 
     return (
         <div className="relative w-full h-[100vh] bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${dayTimeBGImg})` }}>
             <div className="absolute inset-0 bg-black opacity-40"></div>
             <div className="relative z-10 w-[80%] pt-16 mx-auto">
-                <div className='w-[55%] flex justify-between gap-3'>
+                <div className='quoteDiv w-[55%] flex justify-between gap-3'>
                     <div className='w-[90%]'>
                         {quotes ? (
                             <>
@@ -40,6 +67,47 @@ const MainPage = () => {
                             onClick={fetchQuote}
                         />
                     </div>
+                </div>
+
+                <div className="timeDiv mt-20">
+                    {timeData && (
+                        <>
+                            <div className='flex gap-4'>
+                                <img className='w-[30px]' src={sunIcon} alt="" />
+                                <p className='text-white text-[20px] font-medium tracking-[4px]'>
+                                    {timeData ? (
+                                        <>
+                                            <span>GOOD {getGreetingText(getFormattedTime(timeData.datetime).hours)}</span>, IT'S CURRENTLY
+                                        </>
+                                    ) : (
+                                        <span>LOADING TIME...</span>
+                                    )}
+                                </p>
+                            </div>
+
+                            <div>
+                                <div className='flex gap-4 items-center'>
+                                    <h1 className='text-[180px] font-bold text-white tracking-[10px]'>
+                                        {getFormattedTime(timeData.datetime).formattedHours}:{getFormattedTime(timeData.datetime).formattedMinutes}
+                                    </h1>
+
+                                    <div className='flex flex-col'>
+                                        <p className='text-[32px] font-medium text-white tracking-[2px]'>
+                                            {getFormattedTime(timeData.datetime).ampm}
+                                        </p>
+                                        <p className='text-[32px] font-medium text-white tracking-[2px]'>
+                                            {timeData.utc_offset}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className='flex gap-4'>
+                                    <p className='text-white font-bold text-[32px] tracking-[2px]'>IN</p>
+                                    <p className='text-white font-bold text-[32px] tracking-[2px]'>{timeData.timezone}</p>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
