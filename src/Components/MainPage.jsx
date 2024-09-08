@@ -4,6 +4,7 @@ import nightTimeImg from "../assets/desktop/bg-image-nighttime.jpg";
 import refreshIcon from "../assets/desktop/icon-refresh.svg";
 import sunIcon from "../assets/desktop/icon-sun.svg";
 import moonIcon from "../assets/desktop/icon-moon.svg";
+import arrowIcon from "../assets/desktop/icon-arrow-up.svg";
 
 const MainPage = () => {
     const [quotes, setQuote] = useState(null);
@@ -102,11 +103,20 @@ const MainPage = () => {
                                     </div>
                                 </div>
 
-                                <div className='flex gap-4'>
-                                    <p className='text-white font-bold text-[32px] tracking-[2px]'>IN</p>
-                                    <p className='text-white font-bold text-[32px] tracking-[2px]'>
-                                        {timeData.timezone.split('/')[1]}
-                                    </p>
+                                <div className='w-full flex justify-between'>
+                                    <div className='flex gap-4'>
+                                        <p className='text-white font-bold text-[32px] tracking-[2px]'>IN</p>
+                                        <p className='text-white font-bold text-[32px] tracking-[2px]'>
+                                            {timeData.timezone.split('/')[1]}
+                                        </p>
+                                    </div>
+
+                                    <button className='bg-white px-6 py-3 rounded-[50px] flex items-center gap-3 hover:opacity-65 transition-all delay-75'>
+                                        <p className='font-semibold text-[18px] text-gray-500 tracking-[4px]'>
+                                            MORE
+                                        </p>
+                                        <img className='rounded-full' src={arrowIcon} alt="" />
+                                    </button>
                                 </div>
                             </div>
                         </>
