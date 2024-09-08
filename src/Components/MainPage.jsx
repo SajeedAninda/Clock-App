@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import dayTimeBGImg from "../assets/desktop/daytime.jpg";
 import nightTimeImg from "../assets/desktop/bg-image-nighttime.jpg";
 import refreshIcon from "../assets/desktop/icon-refresh.svg";
@@ -12,6 +12,7 @@ const MainPage = () => {
     const [timeData, setTimeData] = useState(null);
     const [seeMore, setSeeMore] = useState(false);
     const [loading, setLoading] = useState(true);
+    const bottomDivRef = useRef(null);
 
     const fetchQuote = () => {
         fetch('https://api.quotable.io/random')
@@ -57,6 +58,13 @@ const MainPage = () => {
         return hours >= 18 || hours < 6;
     };
 
+    const handleSeeMoreClick = () => {
+        setSeeMore(!seeMore);
+        if (!seeMore) {
+            bottomDivRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <div>
             <div className="relative w-full h-[100vh] bg-cover bg-center bg-no-repeat"
@@ -88,7 +96,6 @@ const MainPage = () => {
 
                     <div className="timeDiv mt-20">
                         {loading ? (
-
                             <div className="text-white text-[100px] font-bold text-center flex flex-col justify-center items-center">
                                 <Watch
                                     visible={true}
@@ -136,7 +143,7 @@ const MainPage = () => {
                                                 </p>
                                             </div>
 
-                                            <button onClick={() => setSeeMore(!seeMore)} className='bg-white px-6 py-3 rounded-[50px] flex items-center gap-3 hover:opacity-65 transition-all delay-75'>
+                                            <button onClick={handleSeeMoreClick} className='bg-white px-6 py-3 rounded-[50px] flex items-center gap-3 hover:opacity-65 transition-all delay-75'>
                                                 <p className='font-semibold text-[18px] text-gray-500 tracking-[4px]'>
                                                     MORE
                                                 </p>
@@ -149,6 +156,12 @@ const MainPage = () => {
                         )}
                     </div>
                 </div>
+            </div>
+
+            <div
+                ref={bottomDivRef} 
+                className={`bottomDiv bg-[#acacacbf] transition-all duration-500 ease-in-out ${seeMore ? 'h-[50vh]' : 'h-0 overflow-hidden'}`} 
+            >
             </div>
         </div>
     );
