@@ -159,10 +159,31 @@ const MainPage = () => {
             </div>
 
             <div
-                ref={bottomDivRef} 
-                className={`bottomDiv bg-[#acacacbf] transition-all duration-500 ease-in-out ${seeMore ? 'h-[50vh]' : 'h-0 overflow-hidden'}`} 
-            >
+    ref={bottomDivRef} 
+    className={`bottomDiv bg-[#acacacbf] transition-all duration-500 ease-in-out ${seeMore ? 'h-[60vh]' : 'h-0 overflow-hidden'}`} 
+>
+    {timeData && (
+        <div className="grid grid-cols-2 justify-evenly items-center h-full text-[#303030] text-center py-8">
+            <div className="timezoneInfo">
+                <p className="text-[16px] tracking-[2px]">CURRENT TIMEZONE</p>
+                <h1 className="text-[50px] font-bold">{timeData.timezone}</h1>
             </div>
+            <div className="dayOfYearInfo">
+                <p className="text-[16px] tracking-[2px]">DAY OF THE YEAR</p>
+                <h1 className="text-[50px] font-bold">{timeData.day_of_year}</h1>
+            </div>
+            <div className="dayOfWeekInfo">
+                <p className="text-[16px] tracking-[2px]">DAY OF THE WEEK</p>
+                <h1 className="text-[50px] font-bold">{timeData.day_of_week}</h1>
+            </div>
+            <div className="weekNumberInfo">
+                <p className="text-[16px] tracking-[2px]">WEEK NUMBER</p>
+                <h1 className="text-[50px] font-bold">{timeData.week_number}</h1>
+            </div>
+        </div>
+    )}
+</div>
+
         </div>
     );
 };
