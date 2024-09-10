@@ -22,7 +22,7 @@ const MainPage = () => {
 
     const fetchTimeData = () => {
         setLoading(true);
-        fetch('http://worldtimeapi.org/api/ip')
+        fetch('https://worldtimeapi.org/api/ip')
             .then(response => response.json())
             .then(json => {
                 setTimeData(json);
